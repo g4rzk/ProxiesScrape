@@ -1,0 +1,58 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: get_proxies
+
+on: 
+  push: 
+    branches: [ master ]
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '*/10 * * * *'
+  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+        
+    - name: 💿 install module and install get_proxies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests[socks]
+        pip install requests
+
+    - name: 🗑 Remove all file txt
+      run: | 
+        rm -f *.txt
+
+    - name: 📥 Download get_proxies
+      run: |
+        curl https://raw.githubusercontent.com/g4rzk/get_proxies/master/run.py -o run.py
+
+    - name: 🚀 Run get_proxies
+      run: |
+        python run.py -o proxies.json 
+
+    - name: ➕ Proses Commit
+      run: |
+        git config --global user.name "g4rzk"
+        git config --global user.email "g4rzkurniawan@gmail.com"
+        rm -rf .git run.py
+        git init
+        git add .
+        git commit -m "`env TZ=Asia/Jakarta date`"
+        git remote add origin git@github.com:g4rzk/ProxiesScrape.git
+        
+    - name: ✅ Proses Push
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: master
+        force: true

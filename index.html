@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="description" content="Merupakan Sebuah Website Penyedia Proxies Live Gratis Auto Update Setiap Hari">
+	<title>ProxyScrape - Free Proxy Live</title>
+	
+	<link rel="shortcut icon" href="img/icon.png">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular.min.js"></script>
+</head>
+
+<body>
+	<div class="container my-4">
+		<div class="row">
+			<div class="col-md-11 mx-auto">
+				
+				<div class="row">
+					<div class="col-md-8 mx-auto">
+						
+						<div class="d-flex flex-column text-center">
+							<h1 class="fw-normal">Proxy Scrape</h1>
+							<p class="fw-light">Merupakan Sebuah Website Penyedia Proxy Live Gratis Untuk Anda</p>
+							<div class="button-wrapper my-3">
+								<a href="/proxies.json"><button class="btn btn-outline-primary rounded-1 button mx-1">Download as JSON</button></a>
+								<a href="/proxies.txt"><button class="btn btn-outline-primary rounded-1 button mx-1" href="/proxies.txt">Download as TXT</button></a>
+							</div>
+               
+						</div>
+					</div>
+				</div>
+
+		<div class="content" ng-app="appProxiesScrape">
+			<div class="table-responsive" data-ng-controller="ProxiesScrapeCtrl">
+				<table class="table">
+					<thead>
+						<tr>
+							<th class="fw-normal p-3">#</th>
+							<th class="fw-normal p-3">IP</th>
+							<th class="fw-normal p-3">Port</th>
+							<th class="fw-normal p-3">Country</th>
+							<th class="fw-normal p-3">Type</th>
+							<th class="fw-normal p-3">Anonymity</th>
+							<th class="fw-normal p-3">Time Response</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="g4rzk in data">
+							<td class="fw-normal p-3">{{$index+1}}</td>
+							<td class="fw-normal p-3">{{g4rzk.ip}}</td>
+							<td class="fw-normal p-3">{{g4rzk.port}}</td>
+							<td class="fw-normal p-3">{{g4rzk.country}}</td>
+							<td class="fw-normal p-3">{{g4rzk.type}}</td>
+							<td class="fw-normal p-3">{{g4rzk.anonymity}}</td>
+							<td class="fw-normal p-3">{{g4rzk.time_response}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	
+	</div>
+</body>
+<script type="text/javascript">
+	var app = angular.module("appProxiesScrape", []);
+	app.controller("ProxiesScrapeCtrl", function($scope, $http) {
+		$scope.data = [];
+		$http.get("proxies.json").then((response) => {
+			json = response.data;
+        	Object.keys(json).map(key => {
+				if (Array.isArray(json[key])) {
+					json[key].forEach(proxy => {
+						$scope.data.push(proxy);
+					});
+				}
+			});
+		})
+	});
+</script>
+</html>
